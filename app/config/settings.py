@@ -38,7 +38,7 @@ DB_HOST = require_env(env_name="POSTGRES_HOST_ADDRESS")
 DB_NAME = require_env(env_name="POSTGRES_DB_NAME")
 DB_USER = require_env(env_name="POSTGRES_USERNAME")
 DB_PW = require_env(env_name="POSTGRES_PW")
-
-DEBUG = get_bool_env(env_name="DEBUG")
-
 SQL_ALCHEMY_DB_URL = "postgresql://{}:{}@{}/{}".format(DB_USER, DB_PW, DB_HOST, DB_NAME)
+DEBUG = get_bool_env(env_name="DEBUG")
+SECRET_KEY = require_env(env_name="SECRET_KEY")
+ACCESS_TOKEN_EXPIRE_MINUTES = require_env(env_name="ACCESS_TOKEN_EXPIRE_MINUTES")

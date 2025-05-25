@@ -37,3 +37,7 @@ class UsersUpdate(UsersBase):
 
 class UsersResponse(UsersBase):
     id: int
+
+
+class UserLogin(UsersBase):
+    password: str
