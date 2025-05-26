@@ -42,3 +42,4 @@ SQL_ALCHEMY_DB_URL = "postgresql://{}:{}@{}/{}".format(DB_USER, DB_PW, DB_HOST, 
 DEBUG = get_bool_env(env_name="DEBUG")
 SECRET_KEY = require_env(env_name="SECRET_KEY")
 ACCESS_TOKEN_EXPIRE_MINUTES = require_env(env_name="ACCESS_TOKEN_EXPIRE_MINUTES")
+JWT_ALGORITHM = require_env(env_name="JWT_ALGORITHM")

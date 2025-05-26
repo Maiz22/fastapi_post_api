@@ -5,6 +5,7 @@ from ..core import security
 from ..schemas import UsersCreate, UsersResponse
 from ..models import Users
 from ..db import engine
+from ..crud.users import get_user_by_id
 
 
 router = APIRouter()
@@ -23,12 +24,10 @@ def create_user(user: UsersCreate):
 
 @router.get("/{id}", status_code=status.HTTP_200_OK, response_model=UsersResponse)
 def get_user(id: int):
-    with Session(engine) as session:
-        statement = select(Users).where(Users.id == id)
-        user = session.exec(statement).first()
-        if user is None:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"User with id {id} not found in the DB",
-            )
+    user = get_user_by_id(id)
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"User with id {id} not found in the DB",
+        )
     return user
