@@ -1,12 +1,9 @@
 from fastapi import APIRouter, Depends, status, HTTPException, Response
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
-from sqlmodel import Session, select
 from typing import Annotated
-from ..db import engine
-from ..schemas import UserLogin
-from ..models import Users
 from ..core.security import verify_password
 from ..core.oauth2 import create_access_token
+from ..crud.users import db_get_user_by_email
 
 
 router = APIRouter()
@@ -19,13 +16,11 @@ def login(user_credentials: Annotated[OAuth2PasswordRequestForm, Depends()]):
     Looks up the user in the DB, verifies the password and creates an JWT.
     Returns the JWT.
     """
-    with Session(engine) as session:
-        statement = select(Users).where(user_credentials.username == Users.email)
-        user = session.exec(statement).first()
-        if not user:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Invalid credentials"
-            )
+    user = db_get_user_by_email(email=user_credentials.username)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Invalid credentials"
+        )
     if not verify_password(user_credentials.password, user.password):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Invalid credentials"

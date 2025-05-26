@@ -5,7 +5,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Annotated
 from ..schemas import TokenData
 from ..config.settings import SECRET_KEY, JWT_ALGORITHM
-from ..crud.users import get_user_by_id
+from ..crud.users import db_get_user_by_id
 
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
@@ -40,7 +40,7 @@ def verify_access_token(token: str, credentials_exception):
         token_data = TokenData(id=id)
     except InvalidTokenError:
         raise credentials_exception
-    user = get_user_by_id(id=token_data.id)
+    user = db_get_user_by_id(id=token_data.id)
     if user is None:
         raise credentials_exception
     return user
