@@ -51,3 +51,17 @@ class PostsResponse(PostsBase):
     id: int
     created_at: datetime
     user_id: int
+
+
+class VotesBase(SQLModel):
+    user_id: int
+    post_id: int
+    vote_dir: int
+
+
+class VoteCreate(VotesBase):
+    pass
+
+
+class VoteResponse(VotesBase):
+    pass
