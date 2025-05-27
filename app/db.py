@@ -1,5 +1,5 @@
 from sqlmodel import create_engine, SQLModel
-from .config.settings import SQL_ALCHEMY_DB_URL, DEBUG
+from .config.settings import settings
 import logging
 
 # Need to be imported to register all models
@@ -8,8 +8,13 @@ from . import models
 # Use uvicorns logging
 logger = logging.getLogger("uvicorn")
 
+
+SQL_ALCHEMY_DB_URL = "postgresql://{}:{}@{}/{}".format(
+    settings.db_user, settings.db_pw, settings.db_host, settings.db_name
+)
+
 logger.info("Connecting to database...")
-if DEBUG is True:
+if settings.debug is True:
     engine = create_engine(SQL_ALCHEMY_DB_URL, echo=True)
 else:
     engine = create_engine(SQL_ALCHEMY_DB_URL, echo=False)

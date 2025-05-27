@@ -5,7 +5,7 @@ from jwt.exceptions import InvalidTokenError
 from datetime import datetime, timedelta, timezone
 from typing import Annotated
 from ..schemas import TokenData
-from ..config.settings import SECRET_KEY, JWT_ALGORITHM
+from ..config.settings import settings
 from ..crud.users import db_get_user_by_id
 from ..models import Users
 
@@ -29,7 +29,9 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None) -> s
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=15)
     data_to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(data_to_encode, SECRET_KEY, JWT_ALGORITHM)
+    encoded_jwt = jwt.encode(
+        data_to_encode, settings.secret_key, settings.jwt_algorithm
+    )
     return encoded_jwt
 
 
@@ -42,7 +44,9 @@ def verify_access_token(token: str, credentials_exception) -> TokenData | None:
     Returns token_data in case the token is valid.
     """
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=JWT_ALGORITHM)
+        payload = jwt.decode(
+            token, settings.secret_key, algorithms=settings.jwt_algorithm
+        )
         id = payload.get("user_id")
         if id is None:
             raise credentials_exception

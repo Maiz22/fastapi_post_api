@@ -1,45 +1,33 @@
 import os
 from dotenv import load_dotenv
+from pydantic import Field
+from pydantic_settings import BaseSettings
 
 
 load_dotenv()
 
 
-def require_env(env_name: str) -> str:
+class Settings(BaseSettings):
     """
-    Checks if an env exists and returns it.
-    Raises an Environment error if it does not exist.
+    Settings class loading all of our env vars directly
+    from the .env file if it exists (in dev).
+    If there is  no .env file in production it will look
+    in our OS.
     """
-    env = os.getenv(env_name)
-    if env is None or env.strip() == "":
-        raise EnvironmentError(f"Missing environment variable {env}")
-    return env
+
+    db_host: str = Field(validation_alias="POSTGRES_HOST_ADDRESS")
+    db_name: str = Field(validation_alias="POSTGRES_DB_NAME")
+    db_user: str = Field(validation_alias="POSTGRES_USERNAME")
+    db_pw: str = Field(validation_alias="POSTGRES_PW")
+    debug: bool = Field(validation_alias="DEBUG")
+    secret_key: str = Field(validation_alias="SECRET_KEY")
+    access_token_expire_minutes: int = Field(
+        validation_alias="ACCESS_TOKEN_EXPIRE_MINUTES"
+    )
+    jwt_algorithm: str = Field(validation_alias="JWT_ALGORITHM")
+
+    class Config:
+        env_file = "....env"
 
 
-def get_bool_env(env_name: str) -> bool:
-    """
-    Transforms the env var to bool. Returns false when value
-    is set to false, or no valid boolean has been set.
-    """
-    env = require_env(env_name)
-    return env.strip().lower() in ("1", "true", "yes")
-
-
-def get_int_env(env_name: str) -> int:
-    """
-    Transforms the str input to integer.
-    Returns value error if env cannot be transformed.
-    """
-    env = require_env(env_name)
-    return int(env)
-
-
-DB_HOST = require_env(env_name="POSTGRES_HOST_ADDRESS")
-DB_NAME = require_env(env_name="POSTGRES_DB_NAME")
-DB_USER = require_env(env_name="POSTGRES_USERNAME")
-DB_PW = require_env(env_name="POSTGRES_PW")
-SQL_ALCHEMY_DB_URL = "postgresql://{}:{}@{}/{}".format(DB_USER, DB_PW, DB_HOST, DB_NAME)
-DEBUG = get_bool_env(env_name="DEBUG")
-SECRET_KEY = require_env(env_name="SECRET_KEY")
-ACCESS_TOKEN_EXPIRE_MINUTES = require_env(env_name="ACCESS_TOKEN_EXPIRE_MINUTES")
-JWT_ALGORITHM = require_env(env_name="JWT_ALGORITHM")
+settings = Settings()

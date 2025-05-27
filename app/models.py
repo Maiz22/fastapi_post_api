@@ -1,6 +1,5 @@
 from sqlmodel import Field, SQLModel, ForeignKey, Relationship
 from datetime import datetime
-from typing import List, Optional
 
 
 class Users(SQLModel, table=True):

@@ -2,7 +2,6 @@ from sqlmodel import SQLModel
 from typing import Optional
 from datetime import datetime
 from pydantic import EmailStr
-from typing import List
 
 
 class UsersBase(SQLModel):
