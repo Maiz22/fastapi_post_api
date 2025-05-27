@@ -8,9 +8,10 @@ from ..schemas import TokenData
 from ..config.settings import SECRET_KEY, JWT_ALGORITHM
 from ..crud.users import db_get_user_by_id
 from ..models import Users
-from ..schemas import Token
 
 
+# OAuth2 instance (scheme) that can be used as dependency to validate the Bearer token.
+# The tokenURL is the path that is used to create the token
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 
@@ -32,7 +33,14 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None) -> s
     return encoded_jwt
 
 
-def verify_access_token(token: str, credentials_exception) -> TokenData:
+def verify_access_token(token: str, credentials_exception) -> TokenData | None:
+    """
+    Verifies the access token. Takes the token data, SECRET_KEY and algorithm
+    used to create the certificate. Decodes the token, creates a test signature
+    compares test signature with token signature. jwt.decode raises exceptions
+    if certificate does not match or if it is expired.
+    Returns token_data in case the token is valid.
+    """
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=JWT_ALGORITHM)
         id = payload.get("user_id")
@@ -44,7 +52,14 @@ def verify_access_token(token: str, credentials_exception) -> TokenData:
     return token_data
 
 
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> Users:
+async def get_current_user(
+    token: Annotated[str, Depends(oauth2_scheme)],
+) -> Users | None:
+    """
+    Takes a bearer token that is required to follow the oauth2_scheme.
+    Returns a user instance, if verification and user extraction are successful.
+    Raises credential exception if no user could be found in db.
+    """
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
