@@ -29,7 +29,12 @@ def db_get_post_by_id(id: int) -> Posts | None:
     return post
 
 
-def db_create_post(post: PostsCreate):
+def db_create_post(post: PostsCreate) -> Posts:
+    """
+    Takes a post of schema type PostsCreate. Dumps the dictionary
+    to the Posts model.Adds the new_post to the DB, commits changes and refreshes the DB.
+    Rerturns the Posts object.
+    """
     new_post = Posts(**post.model_dump())
     with Session(engine) as session:
         session.add(new_post)

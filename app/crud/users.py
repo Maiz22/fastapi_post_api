@@ -1,8 +1,13 @@
 from sqlmodel import Session, select
+from sqlalchemy.exc import IntegrityError
+import logging
 from ..db import engine
 from ..schemas import UsersCreate
 from ..models import Users
 from ..core import security
+
+
+logger = logging.getLogger("uvicorn")
 
 
 def db_get_user_by_id(id: int) -> Users | None:
@@ -38,8 +43,12 @@ def db_create_user(user: UsersCreate) -> Users:
     """
     new_user = Users(**user.model_dump())
     new_user.password = security.hash_password(user.password)
-    with Session(engine) as session:
-        session.add(new_user)
-        session.commit()
-        session.refresh(new_user)
+    try:
+        with Session(engine) as session:
+            session.add(new_user)
+            session.commit()
+            session.refresh(new_user)
+    except IntegrityError:
+        logger.info("An account with this email already exists.")
+        new_user = None
     return new_user

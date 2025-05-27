@@ -49,4 +49,4 @@ class Token(SQLModel):
 
 
 class TokenData(SQLModel):
-    id: str
+    id: int
