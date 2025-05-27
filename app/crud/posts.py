@@ -1,17 +1,27 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
 from sqlmodel import Session, select
 from typing import List
 from ..db import engine
 from ..models import Posts
 from ..schemas import PostsCreate, PostsUpdate
 
+if TYPE_CHECKING:
+    from ..models import Users
 
-def db_get_all_posts() -> List[Posts]:
+
+def db_get_all_posts(limit: int, skip: int, search: str) -> List[Posts]:
     """
     Extracts all elements from the Posts db.
     Returns a list of all Posts instances.
     """
     with Session(engine) as session:
-        statement = select(Posts)
+        statement = (
+            select(Posts)
+            .where(Posts.title.ilike(f"%{search}%"))
+            .offset(skip)
+            .limit(limit)
+        )
         results = session.exec(statement)
         posts = results.all()
     return posts
@@ -29,13 +39,14 @@ def db_get_post_by_id(id: int) -> Posts | None:
     return post
 
 
-def db_create_post(post: PostsCreate) -> Posts:
+def db_create_post(post: PostsCreate, user: Users) -> Posts:
     """
     Takes a post of schema type PostsCreate. Dumps the dictionary
     to the Posts model.Adds the new_post to the DB, commits changes and refreshes the DB.
     Rerturns the Posts object.
     """
     new_post = Posts(**post.model_dump())
+    new_post.user_id = user.id
     with Session(engine) as session:
         session.add(new_post)
         session.commit()

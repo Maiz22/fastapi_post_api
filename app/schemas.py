@@ -2,25 +2,7 @@ from sqlmodel import SQLModel
 from typing import Optional
 from datetime import datetime
 from pydantic import EmailStr
-
-
-class PostsBase(SQLModel):
-    title: str
-    content: str
-    published: Optional[bool] = True
-
-
-class PostsCreate(PostsBase):
-    pass
-
-
-class PostsUpdate(PostsBase):
-    pass
-
-
-class PostsResponse(PostsBase):
-    id: int
-    created_at: datetime
+from typing import List
 
 
 class UsersBase(SQLModel):
@@ -50,3 +32,23 @@ class Token(SQLModel):
 
 class TokenData(SQLModel):
     id: int
+
+
+class PostsBase(SQLModel):
+    title: str
+    content: str
+    published: Optional[bool] = True
+
+
+class PostsCreate(PostsBase):
+    pass
+
+
+class PostsUpdate(PostsBase):
+    pass
+
+
+class PostsResponse(PostsBase):
+    id: int
+    created_at: datetime
+    user_id: int
