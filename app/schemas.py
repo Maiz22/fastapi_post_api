@@ -54,14 +54,12 @@ class PostsResponse(PostsBase):
 
 
 class VotesBase(SQLModel):
-    user_id: int
     post_id: int
+
+
+class VotesCreate(VotesBase):
     vote_dir: int
 
 
-class VoteCreate(VotesBase):
-    pass
-
-
-class VoteResponse(VotesBase):
-    pass
+class VotesResponse(VotesBase):
+    user_id: int

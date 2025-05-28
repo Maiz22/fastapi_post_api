@@ -10,6 +10,7 @@ from ..crud.posts import (
     db_create_post,
     db_delete_post,
     db_update_post,
+    get_votes_count_table_from_posts,
 )
 
 if TYPE_CHECKING:
@@ -26,6 +27,8 @@ async def get_posts(
     search: Optional[str] = "",
 ):
     posts = db_get_all_posts(limit=limit, skip=skip, search=search)
+    votes = get_votes_count_table_from_posts()
+    print(votes)
     return posts
 
 
@@ -51,15 +54,15 @@ async def create_post(
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_post(id: int, current_user: Users = Depends(get_current_user)):
     post = db_get_post_by_id(id)
-    if current_user.id != post.user_id:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Not authorized to perfrom requested action",
-        )
     if post is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Post with ID: {id} was not found",
+        )
+    if current_user.id != post.user_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to perfrom requested action",
         )
     db_delete_post(post)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

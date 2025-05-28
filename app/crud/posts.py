@@ -1,9 +1,9 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
-from sqlmodel import Session, select
+from sqlmodel import Session, select, func
 from typing import List
 from ..db import engine
-from ..models import Posts
+from ..models import Posts, Votes
 from ..schemas import PostsCreate, PostsUpdate
 
 if TYPE_CHECKING:
@@ -78,3 +78,14 @@ def db_update_post(post: Posts, updated_post: PostsUpdate) -> Posts:
             session.commit()
             session.refresh(post)
     return post
+
+
+def get_votes_count_table_from_posts():
+    with Session(engine) as session:
+        statement = (
+            select(Posts, func.count(Votes.post_id).label("votes_count"))
+            .join(Votes, Posts.id == Votes.post_id)
+            .group_by(Posts.id)
+        )
+        votes_count_table = session.exec(statement)
+    return votes_count_table
