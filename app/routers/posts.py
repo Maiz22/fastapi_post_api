@@ -10,7 +10,8 @@ from ..crud.posts import (
     db_create_post,
     db_delete_post,
     db_update_post,
-    get_votes_count_table_from_posts,
+    db_get_posts_with_votes,
+    db_get_post_with_votes_by_id,
 )
 
 if TYPE_CHECKING:
@@ -26,21 +27,38 @@ async def get_posts(
     skip: int = 0,
     search: Optional[str] = "",
 ):
-    posts = db_get_all_posts(limit=limit, skip=skip, search=search)
-    votes = get_votes_count_table_from_posts()
-    print(votes)
-    return posts
+    posts_with_votes = db_get_posts_with_votes(limit=limit, skip=skip, search=search)
+    return [
+        PostsResponse(
+            title=post.title,
+            content=post.content,
+            published=post.published,
+            id=post.id,
+            created_at=post.created_at,
+            user_id=post.user_id,
+            votes_count=votes_count,
+        )
+        for post, votes_count in posts_with_votes
+    ]
 
 
 @router.get("/{id}", status_code=status.HTTP_200_OK, response_model=PostsResponse)
 async def get_post(id: int, current_user: Users = Depends(get_current_user)):
-    post = db_get_post_by_id(id)
+    post, votes_count = db_get_post_with_votes_by_id(id)
     if post is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Post with ID: {id} was not found",
         )
-    return post
+    return PostsResponse(
+        title=post.title,
+        content=post.content,
+        published=post.published,
+        id=post.id,
+        created_at=post.created_at,
+        user_id=post.user_id,
+        votes_count=votes_count,
+    )
 
 
 @router.post("", status_code=status.HTTP_201_CREATED, response_model=PostsResponse)

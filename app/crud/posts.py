@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Sequence, Tuple
 from sqlmodel import Session, select, func
 from typing import List
 from ..db import engine
@@ -80,12 +80,36 @@ def db_update_post(post: Posts, updated_post: PostsUpdate) -> Posts:
     return post
 
 
-def get_votes_count_table_from_posts():
+def db_get_posts_with_votes(
+    limit: int, skip: int, search: str
+) -> Sequence[Tuple[Posts, int]]:
+    """
+    Performs a left join between posts and votes on the posts_id
+    column. Groups everything by posts_id and counts the votes
+    per post.
+    Returns a Sequence of tuples of Posts with the corresponding
+    votes count as int.
+    """
     with Session(engine) as session:
         statement = (
             select(Posts, func.count(Votes.post_id).label("votes_count"))
             .join(Votes, Posts.id == Votes.post_id)
             .group_by(Posts.id)
+            .where(Posts.title.ilike(f"%{search}%"))
+            .offset(skip)
+            .limit(limit)
         )
-        votes_count_table = session.exec(statement)
+        votes_count_table = session.exec(statement).all()
     return votes_count_table
+
+
+def db_get_post_with_votes_by_id(id: int):
+    with Session(engine) as session:
+        statement = (
+            select(Posts, func.count(Votes.post_id).label("votes_count"))
+            .join(Votes, Posts.id == Votes.post_id)
+            .group_by(Posts.id)
+            .where(Posts.id == id)
+        )
+        post = session.exec(statement).first()
+    return post
