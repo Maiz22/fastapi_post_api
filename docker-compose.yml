@@ -5,7 +5,7 @@ services:
         restart: always
         environment:
             POSTGRES_USERNAME: ${POSTGRES_USERNAME}
-            POSTGRES_PW: ${POSTGRES_PW}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
             POSTGRES_DB_NAME: ${POSTGRES_DB_NAME}
         volumes:
             - postgres_data:/var/lib/postgresql/data
