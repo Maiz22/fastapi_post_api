@@ -9,14 +9,16 @@ from . import models
 logger = logging.getLogger("uvicorn")
 
 
-SQL_ALCHEMY_DB_URL = "postgresql://{}:{}@{}/{}".format(
-    settings.db_user, settings.db_pw, settings.db_host, settings.db_name
-)
-
 logger.info("Connecting to database...")
 if settings.debug is True:
+    SQL_ALCHEMY_DB_URL = "postgresql://{}:{}@{}/{}".format(
+        settings.db_user, settings.db_pw, settings.db_host, settings.db_name
+    )
     engine = create_engine(SQL_ALCHEMY_DB_URL, echo=True)
 else:
+    SQL_ALCHEMY_DB_URL = (
+        f"postgresql://{settings.db_user}:{settings.db_pw}@db:5432/{settings.db_name}"
+    )
     engine = create_engine(SQL_ALCHEMY_DB_URL, echo=False)
 logger.info("Connection to database established.")
 
