@@ -12,6 +12,7 @@ services:
         ports:
             - '5432:5432'
     api:
+        restart: always
         build: .
         depends_on:
             - db
@@ -24,6 +25,7 @@ services:
 
     nginx:
         image: nginx:alpine
+        restart: always
         container_name: fastapi_nginx
         ports:
             - '80:80'
