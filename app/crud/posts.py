@@ -2,12 +2,16 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Sequence, Tuple
 from sqlmodel import Session, select, func
 from typing import List
+import logging
 from ..db import engine
 from ..models import Posts, Votes
 from ..schemas import PostsCreate, PostsUpdate
 
 if TYPE_CHECKING:
     from ..models import Users
+
+
+logger = logging.getLogger("uvicorn")
 
 
 def db_get_all_posts(limit: int, skip: int, search: str) -> List[Posts]:
@@ -47,10 +51,13 @@ def db_create_post(post: PostsCreate, user: Users) -> Posts:
     """
     new_post = Posts(**post.model_dump())
     new_post.user_id = user.id
-    with Session(engine) as session:
-        session.add(new_post)
-        session.commit()
-        session.refresh(new_post)
+    try:
+        with Session(engine) as session:
+            session.add(new_post)
+            session.commit()
+    except Exception as err:
+        logger.info("Error while creating a post", err)
+        new_post = None
     return new_post
 
 
@@ -81,7 +88,7 @@ def db_update_post(post: Posts, updated_post: PostsUpdate) -> Posts:
 
 
 def db_get_posts_with_votes(
-    limit: int, skip: int, search: str
+    limit: int = 10, skip: int = 0, search: str = ""
 ) -> Sequence[Tuple[Posts, int]]:
     """
     Performs a left join between posts and votes on the posts_id
@@ -93,7 +100,7 @@ def db_get_posts_with_votes(
     with Session(engine) as session:
         statement = (
             select(Posts, func.count(Votes.post_id).label("votes_count"))
-            .join(Votes, Posts.id == Votes.post_id)
+            .join(Votes, Posts.id == Votes.post_id, isouter=True)
             .group_by(Posts.id)
             .where(Posts.title.ilike(f"%{search}%"))
             .offset(skip)
@@ -103,13 +110,13 @@ def db_get_posts_with_votes(
     return votes_count_table
 
 
-def db_get_post_with_votes_by_id(id: int):
+def db_get_post_with_votes_by_id(id: int) -> Tuple[Posts, int]:
     with Session(engine) as session:
         statement = (
             select(Posts, func.count(Votes.post_id).label("votes_count"))
-            .join(Votes, Posts.id == Votes.post_id)
+            .join(Votes, Posts.id == Votes.post_id, isouter=True)
             .group_by(Posts.id)
             .where(Posts.id == id)
         )
-        post = session.exec(statement).first()
-    return post
+        post_with_vote = session.exec(statement).first()
+    return post_with_vote

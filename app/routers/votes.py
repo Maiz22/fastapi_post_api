@@ -19,7 +19,7 @@ def set_vote(vote: VotesCreate, current_user: Users = Depends(get_current_user))
         if cur_vote is None:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
-                detail="User can only upvote a post once.",
+                detail="Post does not exist or has already been upvoted.",
             )
         return {"message": f"Successfully voted on post {cur_vote.post_id}"}
     elif vote.vote_dir == 0:
@@ -27,7 +27,7 @@ def set_vote(vote: VotesCreate, current_user: Users = Depends(get_current_user))
         if cur_vote is None:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail="Vote does not exist.",
+                detail="Vote or post does not exist.",
             )
         db_delete_vote(cur_vote)
         return {"message": f"Succesfully deleted vote on post {cur_vote.post_id}."}

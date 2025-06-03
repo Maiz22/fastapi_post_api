@@ -54,6 +54,12 @@ class PostsResponse(PostsBase):
     votes_count: int
 
 
+class PostsResponseCreate(PostsBase):
+    id: int
+    created_at: datetime
+    user_id: int
+
+
 class VotesBase(SQLModel):
     post_id: int
 
