@@ -24,7 +24,7 @@ class UserLogin(UsersBase):
     password: str
 
 
-class Token(SQLModel):
+class TokenCreate(SQLModel):
     access_token: str
     token_type: str
 

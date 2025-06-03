@@ -86,7 +86,7 @@ def db_update_post(post: Posts, updated_post: PostsUpdate) -> Posts:
 
 def db_get_posts_with_votes(
     limit: int = 10, skip: int = 0, search: str = ""
-) -> Sequence[Tuple[Posts, int]]:
+) -> Sequence[Tuple[Posts, int, List[str]]]:
     """
     Performs a left join between posts and votes on the posts_id
     column. Groups everything by posts_id and counts the votes
