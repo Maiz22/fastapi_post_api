@@ -88,11 +88,11 @@ def db_get_posts_with_votes(
     limit: int = 10, skip: int = 0, search: str = ""
 ) -> Sequence[Tuple[Posts, int, List[str]]]:
     """
-    Performs a left join between posts and votes on the posts_id
-    column. Groups everything by posts_id and counts the votes
-    per post.
+    Performs a left join between posts, votes and comments on the
+    posts_id column. Groups everything by posts_id and counts the
+    votes per post.
     Returns a Sequence of tuples of Posts with the corresponding
-    votes count as int.
+    votes count as int and comments as list of strings.
     """
     with Session(engine) as session:
         statement = (
@@ -114,9 +114,12 @@ def db_get_posts_with_votes(
 
 def db_get_post_by_id_join_votes_comments(id: int) -> Tuple[Posts, int, List[str]]:
     """
-    Takes the post id performs two OUTER LEFT JOINS on the posts
-    id column to connect a post with its votes and comments.
-    Returns tuple of post, votes and a list of the posts comments.
+    Takes a post id, selects a post from the db and performs
+    a left join between posts, votes and comments on the posts_id
+    column. Groups everything by posts_id and counts the votes
+    per post.
+    Returns a Sequence of tuples of Posts with the corresponding
+    votes count as int and comments as list of strings.
     """
     with Session(engine) as session:
         statement = (

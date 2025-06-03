@@ -5,14 +5,12 @@ from ..schemas import PostsResponseCreate, PostsCreate, PostsUpdate, PostsRespon
 from ..core.oauth2 import get_current_user
 from typing import Optional
 from ..crud.posts import (
-    db_get_all_posts,
     db_get_post_by_id,
     db_create_post,
     db_delete_post,
     db_update_post,
     db_get_posts_with_votes,
     db_get_post_by_id_join_votes_comments,
-    # db_get_post_with_votes_by_id,
 )
 
 if TYPE_CHECKING:
