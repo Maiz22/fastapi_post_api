@@ -51,13 +51,10 @@ def db_create_post(post: PostsCreate, user: Users) -> Posts:
     """
     new_post = Posts(**post.model_dump())
     new_post.user_id = user.id
-    try:
-        with Session(engine) as session:
-            session.add(new_post)
-            session.commit()
-    except Exception as err:
-        logger.info("Error while creating a post", err)
-        new_post = None
+    with Session(engine) as session:
+        session.add(new_post)
+        session.commit()
+        session.refresh(new_post)
     return new_post
 
 
