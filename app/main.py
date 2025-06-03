@@ -20,20 +20,15 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     # Setup database
     create_db_and_tables()
 
-    # Add middleware
-    # origins = [
-    #    "http://localhost.tiangolo.com",
-    #    "https://localhost.tiangolo.com",
-    #    "http://localhost",
-    #    "http://localhost:8000",
-    # ]
-    # app.add_middleware(
-    #    CORSMiddleware,
-    #    allow_origins=origins,
-    #    allow_credentials=True,
-    #    allow_methods=["*"],
-    #    allow_headers=["*"],
-    # )
+    # Configure CORS to allow all origins in development
+    origins = ["*"]
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
     # Setup routes
     app.include_router(router=root.router, prefix="", tags=["Root"])
