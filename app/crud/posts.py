@@ -4,7 +4,7 @@ from sqlmodel import Session, select, func
 from typing import List
 import logging
 from ..db import engine
-from ..models import Posts, Votes
+from ..models import Posts, Votes, Comments
 from ..schemas import PostsCreate, PostsUpdate
 
 if TYPE_CHECKING:
@@ -96,8 +96,13 @@ def db_get_posts_with_votes(
     """
     with Session(engine) as session:
         statement = (
-            select(Posts, func.count(Votes.post_id).label("votes_count"))
+            select(
+                Posts,
+                func.count(Votes.post_id).label("votes_count"),
+                func.JSON_ARRAYAGG(Comments.content).label("comments"),
+            )
             .join(Votes, Posts.id == Votes.post_id, isouter=True)
+            .join(Comments, Posts.id == Comments.post_id, isouter=True)
             .group_by(Posts.id)
             .where(Posts.title.ilike(f"%{search}%"))
             .offset(skip)
@@ -107,13 +112,26 @@ def db_get_posts_with_votes(
     return votes_count_table
 
 
-def db_get_post_with_votes_by_id(id: int) -> Tuple[Posts, int]:
+def db_get_post_by_id_join_votes_comments(id: int) -> Tuple[Posts, int, List[str]]:
+    """
+    Takes the post id performs two OUTER LEFT JOINS on the posts
+    id column to connect a post with its votes and comments.
+    Returns tuple of post, votes and a list of the posts comments.
+    """
     with Session(engine) as session:
         statement = (
-            select(Posts, func.count(Votes.post_id).label("votes_count"))
+            select(
+                Posts,
+                func.count(Votes.post_id).label("votes_count"),
+                func.JSON_ARRAYAGG(Comments.content).label("comments"),
+            )
             .join(Votes, Posts.id == Votes.post_id, isouter=True)
-            .group_by(Posts.id)
+            .join(Comments, Posts.id == Comments.post_id, isouter=True)
             .where(Posts.id == id)
+            .group_by(Posts.id)
         )
-        post_with_vote = session.exec(statement).first()
-    return post_with_vote
+        try:
+            post, votes, comments = session.exec(statement).first()
+        except TypeError:
+            return None, None, None
+    return post, votes, comments

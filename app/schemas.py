@@ -1,5 +1,5 @@
 from sqlmodel import SQLModel
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 from pydantic import EmailStr
 
@@ -47,15 +47,22 @@ class PostsUpdate(PostsBase):
     pass
 
 
-class PostsResponse(PostsBase):
+class PostsResponse(SQLModel):
     id: int
+    title: str
+    content: str
+    published: Optional[bool] = True
     created_at: datetime
     user_id: int
     votes_count: int
+    comments: List
 
 
-class PostsResponseCreate(PostsBase):
+class PostsResponseCreate(SQLModel):
     id: int
+    title: str
+    content: str
+    published: Optional[bool] = True
     created_at: datetime
     user_id: int
 
@@ -69,4 +76,18 @@ class VotesCreate(VotesBase):
 
 
 class VotesResponse(VotesBase):
+    user_id: int
+
+
+class BaseComment(SQLModel):
+    content: str
+    post_id: int
+
+
+class CommentCreate(BaseComment):
+    pass
+
+
+class CommentResponse(BaseComment):
+    id: int
     user_id: int

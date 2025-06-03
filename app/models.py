@@ -25,3 +25,11 @@ class Votes(SQLModel, table=True):
     __tablename__ = "votes"
     user_id: int = Field(primary_key=True, foreign_key="users.id", ondelete="CASCADE")
     post_id: int = Field(primary_key=True, foreign_key="posts.id", ondelete="CASCADE")
+
+
+class Comments(SQLModel, table=True):
+    __tablename__ = "comments"
+    id: int | None = Field(primary_key=True, nullable=False, default=None)
+    content: str = Field(nullable=False)
+    user_id: int = Field(nullable=False, foreign_key="users.id", ondelete="CASCADE")
+    post_id: int = Field(nullable=False, foreign_key="posts.id", ondelete="CASCADE")

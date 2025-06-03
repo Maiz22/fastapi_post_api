@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from .db import create_db_and_tables
-from .routers import root, posts, users, auth, votes
+from .routers import root, posts, users, auth, votes, comments
 
 if TYPE_CHECKING:
     from typing import AsyncGenerator, Any
@@ -41,6 +41,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     app.include_router(router=users.router, prefix="/users", tags=["Users"])
     app.include_router(router=posts.router, prefix="/posts", tags=["Posts"])
     app.include_router(router=votes.router, prefix="/votes", tags=["Votes"])
+    app.include_router(router=comments.router, prefix="/comments", tags=["Comments"])
 
     yield
 
