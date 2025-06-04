@@ -88,6 +88,8 @@ class CommentCreate(BaseComment):
     pass
 
 
-class CommentResponse(BaseComment):
+class CommentResponse(SQLModel):
     id: int
+    content: str
+    post_id: int
     user_id: int

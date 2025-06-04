@@ -11,6 +11,7 @@ logger = logging.getLogger("uvicorn")
 
 logger.info("Connecting to database...")
 if settings.debug is True:
+    logger.info("Starting in debug mode. ONLY FOR DEVELOPMENT. NOT FOR CONTAINER!")
     SQL_ALCHEMY_DB_URL = "postgresql://{}:{}@{}/{}".format(
         settings.db_user, settings.db_pw, settings.db_host, settings.db_name
     )

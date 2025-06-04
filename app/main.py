@@ -20,16 +20,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     # Setup database
     create_db_and_tables()
 
-    # Configure CORS to allow all origins in development
-    origins = ["*"]
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=origins,
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
-
     # Setup routes
     app.include_router(router=root.router, prefix="", tags=["Root"])
     app.include_router(router=auth.router, tags=["Authentication"])
@@ -45,3 +35,13 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
 
 # Create fast api main instance
 app = FastAPI(lifespan=lifespan)
+
+# Add cors middleware
+origins = ["*"]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)

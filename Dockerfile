@@ -1,5 +1,5 @@
 #the python version we are using in our container
-FROM python:3.12.12
+FROM python:3.12.10
 
 #specify our apps directory
 WORKDIR /usr/src/app
