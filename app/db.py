@@ -19,12 +19,10 @@ def connect_to_postgres_db() -> Engine | None:
     logger.info("Create postgres DB engine...")
     if settings.is_dev is True:
         logger.info("Create non containerized development engine...")
-        SQL_ALCHEMY_DB_URL = "postgresql://{}:{}@{}/{}".format(
-            settings.db_user, settings.db_pw, settings.db_host, settings.db_name
-        )
+        SQL_ALCHEMY_DB_URL = f"postgresql://{settings.db_user}:{settings.db_pw}@{settings.db_host}/{settings.db_name}"
     else:
         logger.info("Create containerized engine...")
-        SQL_ALCHEMY_DB_URL = f"postgresql://{settings.db_user}:{settings.db_pw}@db:5432/{settings.db_name}"
+        SQL_ALCHEMY_DB_URL = f"postgresql://{settings.db_user}:{settings.db_pw}@{settings.db_service_name}:{settings.db_port}/{settings.db_name}"
     logger.info("Engine created.")
     return create_engine(SQL_ALCHEMY_DB_URL, echo=settings.debug)
 
@@ -36,7 +34,9 @@ def connect_to_redis_db():
     logger.info("Creatin redis client...")
     try:
         client = redis.Redis(
-            host="my-production-redis.example.com", port=6379, password="secret"
+            host=settings.redis_service_name,
+            port=settings.redis_port,
+            password=settings.redis_pw,
         )
     except Exception as e:
         logger.error("Unaible to create redis client.")
