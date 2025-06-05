@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     db_user: str = Field(validation_alias="POSTGRES_USERNAME")
     db_pw: str = Field(validation_alias="POSTGRES_PASSWORD")
     debug: bool = Field(validation_alias="DEBUG")
+    is_dev: bool = Field(validation_alias="DEV")
     secret_key: str = Field(validation_alias="SECRET_KEY")
     access_token_expire_minutes: int = Field(
         validation_alias="ACCESS_TOKEN_EXPIRE_MINUTES"

@@ -6,6 +6,7 @@ from contextlib import asynccontextmanager
 from .db import create_db_and_tables
 from .routers import root, posts, users, auth, votes, comments
 
+
 if TYPE_CHECKING:
     from typing import AsyncGenerator, Any
 
@@ -35,6 +36,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
 
 # Create fast api main instance
 app = FastAPI(lifespan=lifespan)
+
 
 # Add cors middleware
 origins = ["*"]

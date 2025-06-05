@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status, HTTPException, Response
+from fastapi import APIRouter, Depends, status, HTTPException, Request
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from typing import Annotated
 from ..core.security import verify_password
@@ -12,6 +12,7 @@ router = APIRouter()
 
 @router.post("/login", status_code=status.HTTP_200_OK, response_model=TokenCreate)
 async def login(
+    request: Request,
     user_credentials: Annotated[OAuth2PasswordRequestForm, Depends()],
 ):
     user = db_get_user_by_email(email=user_credentials.username)
