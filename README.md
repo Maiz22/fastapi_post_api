@@ -1,6 +1,6 @@
 # Social Media FastAPI
 
-## Full Stack Description
+## Stack Description
 -  Backend: Python's FastAPI with SQLModel for ORM and Pydantic-based data validation.
 -  ASGI Server: Uvicorn for handling asynchronous requests.
 -  Process Management: Gunicorn running Uvicorn workers.
@@ -12,6 +12,8 @@
 -  Deployment Environment: Raspberry Pi running Linux, configured to auto-start the stack as a background system service with systemd.
 -  API Documentation: FastAPIs interactive Swagger UI.
 -  Version Control System: GIT & GitHub.
+
+## Project Architecture
 
 ## API Endpoints and Requests
 - "/":
@@ -35,3 +37,5 @@
     - POST: Write a comment for a specific post.
 - "/comments/{id}":
     - DELETE: Delete a comment.
+
+##
