@@ -13,12 +13,13 @@
 -  API Documentation: FastAPIs interactive Swagger UI.
 -  Version Control System: GIT & GitHub.
 
-## Project Architecture
+## Project Structure
+![Screenshot 2025-06-07 000245](https://github.com/user-attachments/assets/6041f31d-e9cb-4cb7-aff9-4a0532921d09)
 
 ## API Endpoints and Requests
 - "/":
     - GET: Root endpoint displaying a simple message to the user.
-- "/login":
+- "/login":     
     - POST: Login to your account by sending username and password.
 - "/users":
     - POST: Create a user account by sending email and password.
