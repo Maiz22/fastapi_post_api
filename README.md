@@ -1,4 +1,12 @@
 # Social Media FastAPI
+This project is a fully containerized and deployable RESTful Social Media API backend. At its core the backend is built using Python's FastAPI with SQLModel for ORM and Pydantic for data validation. The asynchronous request handling is managed by Uvicorn, which runs under the process manager Gunicorn. The database layer uses PostgresSQL. An Nginx server acts as a reverse proxy forwarding client requests and enforcing IP-based rate limiting. Authentication has been implemented using JSON Web Tokens (JWT), with Tokens being issued on a successful login, and required in request headers for certain endpoints. To further increase account security, login throttling has been implemented using a Redis database to track failed login attempts. Furthermore to improve performance, caching has been implemented using the same Redis database.
+<br>
+The FastAPI application, SQL database, Redis, and Nginx reverse proxy are each containerized separately and managed together using Docker and Docker Compose.
+<br>
+This application has been successfully deployed on a Raspberry Pi with Linux as operating system. The entire stack is configured to auto start as a service via systemd in the background.
+<br>
+(Load balancing and HTTP encryption via TLS/SSL handshake have not been implemented since the project has been deployed in a private network on a single server.)
+
 
 ## Stack Description
 -  Backend: Python's FastAPI with SQLModel for ORM and Pydantic-based data validation.
