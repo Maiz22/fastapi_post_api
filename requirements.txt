@@ -14,6 +14,7 @@ docstring_parser==0.16
 dotenv==0.9.9
 email_validator==2.2.0
 fastapi==0.115.12
+fastapi-cache2==0.2.2
 fastapi-cli==0.0.7
 greenlet==3.2.2
 gunicorn==23.0.0
@@ -33,6 +34,7 @@ mdurl==0.1.2
 orjson==3.10.18
 packaging==25.0
 passlib==1.7.4
+pendulum==3.1.0
 pluggy==1.6.0
 psycopg2==2.9.10
 pycparser==2.22
@@ -43,6 +45,7 @@ pydantic_core==2.33.2
 Pygments==2.19.1
 PyJWT==2.10.1
 pytest==8.3.5
+python-dateutil==2.9.0.post0
 python-dotenv==1.1.0
 python-multipart==0.0.20
 PyYAML==6.0.2
@@ -60,6 +63,7 @@ starlette==0.46.2
 typer==0.15.4
 typing-inspection==0.4.1
 typing_extensions==4.13.2
+tzdata==2025.2
 ujson==5.10.0
 uvicorn==0.34.2
 watchfiles==1.0.5

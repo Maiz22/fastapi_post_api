@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from sqlmodel import create_engine, SQLModel
 from .config.settings import settings
 import logging
-import redis
+import redis.asyncio as redis
 
 if TYPE_CHECKING:
     from sqlalchemy.engine import Engine
@@ -37,6 +37,7 @@ def connect_to_redis_db():
             host=settings.redis_service_name,
             port=settings.redis_port,
             password=settings.redis_pw,
+            decode_responses=True,
         )
     except Exception as e:
         logger.error("Unaible to create redis client.")

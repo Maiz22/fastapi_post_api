@@ -3,9 +3,10 @@ from typing import TYPE_CHECKING
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-from .db import create_db_and_tables
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.redis import RedisBackend
+from .db import create_db_and_tables, redis_client
 from .routers import root, posts, users, auth, votes, comments
-
 
 if TYPE_CHECKING:
     from typing import AsyncGenerator, Any
@@ -20,6 +21,9 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
 
     # Setup database
     create_db_and_tables()
+
+    # Setup the cache using the redis client
+    FastAPICache.init(RedisBackend(redis_client), prefix="cache")
 
     # Setup routes
     app.include_router(router=root.router, prefix="", tags=["Root"])
@@ -36,7 +40,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
 
 # Create fast api main instance
 app = FastAPI(lifespan=lifespan)
-
 
 # Add cors middleware
 origins = ["*"]

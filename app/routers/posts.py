@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, List
 from fastapi import APIRouter, Response, status, HTTPException, Depends
+from fastapi_cache.decorator import cache
 from ..schemas import PostsResponseCreate, PostsCreate, PostsUpdate, PostsResponse
 from ..core.oauth2 import get_current_user
 from typing import Optional
@@ -20,12 +21,13 @@ router = APIRouter()
 
 
 @router.get("", status_code=status.HTTP_200_OK, response_model=List[PostsResponse])
+@cache(expire=60)
 async def get_posts(
-    user: Users = Depends(get_current_user),
     limit: int = 10,
     skip: int = 0,
     search: Optional[str] = "",
 ):
+    print("Fetching from DB")
     posts_with_votes = db_get_posts_with_votes(limit=limit, skip=skip, search=search)
     return [
         PostsResponse(
@@ -42,8 +44,10 @@ async def get_posts(
     ]
 
 
+@cache(expire=60)
 @router.get("/{id}", status_code=status.HTTP_200_OK, response_model=PostsResponse)
-async def get_post(id: int, current_user: Users = Depends(get_current_user)):
+async def get_post(id: int):
+    print("Fetching from DB")
     post, vote, comments = db_get_post_by_id_join_votes_comments(id)
     if post is None:
         raise HTTPException(
