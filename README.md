@@ -82,3 +82,34 @@ You can test the application by sending requests to the different endpoints usin
 ```
 http://<device-ip-address>/docs
 ```
+Additionally, if you want to run this application as a service that starts automatically whenever your device boots up, do the following:
+<br>
+Create a systemd service file inside `/etc/systemd/system/myapp.servic`. Create a `myapp.service` file that looks like this:
+```
+[Unit]
+Description=MyApp Docker Compose Service
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+WorkingDirectory=/opt/myapp
+ExecStart=/usr/bin/docker compose up --build
+ExecStop=/usr/bin/docker compose down
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+```
+Then run the following commands:
+```
+sudo systemctl daemon-reexec
+sudo systemctl daemon-reload
+sudo systemctl enable myapp
+sudo systemctl start myapp
+```
+Your API now starts inside a service every time your device boots up.
+
+## Additional Considerations
+Although this API is well-structured, incorporates many security measures, and is easily scalable, there are still a few important considerations to address before deploying it beyond your home network:
+- 
