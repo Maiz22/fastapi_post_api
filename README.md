@@ -19,6 +19,7 @@ This API consist of four containerized components:
     - Creates, Reads, Updates and Deletes data in the PostgresDB
     - Interacts with the Redis DB to implement caching and throttling
     - Handles authentication and password hashing
+    - Implements Cross-Origin Resource Sharing (CORS)
     - Sends HTTP responses
 - Redis database:
     - Caches data for faster response times
