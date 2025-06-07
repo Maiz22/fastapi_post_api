@@ -9,23 +9,28 @@ The API includes interactive documentation via FastAPI's built-in Swagger UI, an
 This application has been successfully deployed on a Raspberry Pi with Linux as operating system. The entire stack is configured to auto start as a service via systemd in the background.
 <br>
 
-## Project Structure
+## Project Infrastructure Breakdown
 This API consist of four containerized components:
 - Nginx Reverse Proxy:
     - Forwarding client requests
     - IP based rate limiting
 - Python FastAPI Application:
-    - Asynchronously handles incoming requests
-    - Creates, Reads, Updates and Deletes data in the PostgresDB
-    - Interacts with the Redis DB to implement caching and throttling
-    - Handles authentication and password hashing
-    - Implements Cross-Origin Resource Sharing (CORS)
-    - Sends HTTP responses
+    - Asynchronous request handling
+    - Response handling
+    - Defining API request and response schemas
+    - CRUD operations to retrive data from the PostgresDB
+    - Authentication using OAuth2 and JWT
+    - Password hashing
+    - Cross-Origin Resource Sharing (CORS)
+    - Throttling logic with Redis DB interaction
+    - Caching logic with Redis DB interaction
+    - Asynchronous Server Gateway Interface (ASGI) using Uvicorn
+    - Process handling using Gunicorn
 - Redis database:
-    - Caches data for faster response times
+    - Stores data for caching
     - Stores failed login attempts to implement throttling      
 - Postgres SQL database:
-    - Main relational database storing all the data
+    - SQL database storing the core data of the API
   
 ![Screenshot 2025-06-07 000245](https://github.com/user-attachments/assets/6041f31d-e9cb-4cb7-aff9-4a0532921d09)
 
