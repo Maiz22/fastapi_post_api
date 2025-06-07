@@ -61,4 +61,5 @@ This API consist of four containerized components:
 This section provides a brief overview of how to deploy the application on a Raspberry Pi or a similar Linux-based device. 
 <br><br>
 Since all parts of this application are containerized and managed using Docker and Docker Compose, you need to first install the Docker-Engine. Please refer to the official installation guide [here](https://docs.docker.com/engine/install/ubuntu/). Furthermore in order to clone this repository you need to install git using the APT package manager in the command line. Enter `sudo apt update` to updated the package list and `sudo apt install git` to install Git. To double check your installation enter `git --version`.
-The application will be deployed inside our `/opt` directory, which is intended for third-party-applications. Here we create a directory "myapi". 
+<br>
+The application will be deployed inside `/opt/myapi`, since the `/opt` directory is intended for third-party-applications. Clone the repository inside `/opt/myapi` using git clone 
