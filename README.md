@@ -112,4 +112,9 @@ Your API now starts inside a service every time your device boots up.
 
 ## Additional Considerations
 Although this API is well-structured, incorporates many security measures, and is easily scalable, there are still a few important considerations to address before deploying it beyond your home network:
-- 
+- Ensure all HTTP traffic is encrypted by implementing SSL/TLS certificates. This can be done at the Nginx reverse proxy level.
+- Set short lifetimes to your JWT tokens.
+- Properly setup CORS since it is currently open for all domains.
+- Set additional security headers in Nginx (e.g. "Strict-Transport-Security", "Content-Security-Policy")
+- If more performance is needed, implement Load Balancing using Nginx and multiple FastAPI application instances.
+- Setup proper logging and monitoring 
