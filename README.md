@@ -58,9 +58,27 @@ This API consist of four containerized components:
     - DELETE🔒: Delete a comment.
 
 ## Application Deployment 
-This section provides a brief overview of how to deploy the application on a Raspberry Pi or a similar Linux-based device. 
-<br><br>
-Since all parts of this application are containerized and managed using Docker and Docker Compose, you need to first install the Docker-Engine. Please refer to the official installation guide [here](https://docs.docker.com/engine/install/ubuntu/). Furthermore in order to clone this repository you need to install Git using the APT package manager in the command line. Enter `sudo apt update` to updated the package list and enter `sudo apt install git` to install Git. To double check your installation enter `git --version`.
-<br>
-The application will be deployed inside `/opt/myapi`, since the `/opt` directory is intended for third-party-applications. Clone the repository inside `/opt/myapi` using `git clone https://github.com/Maiz22/fastapi_post_api.git`. After all files have been successfully downloaded, you need to create a `´.env` file storing all environment variables for the different containers. Use the `.env.example` file to get the necessary information for setting up the `.env` file. The next step is to build your docker images and create and run the docker containers. To do this in one step, use the command `docker compose up --build` . Docker will now create our four containers according to the rules that have been set inside the `Dockerfile` and the `docker-compose.yml` file. 
 
+This section provides a brief overview of how to deploy the application on a Raspberry Pi or a similar Linux-based device.
+<br>
+Since all parts of this application are containerized and managed using Docker and Docker Compose, you first need to install the Docker Engine. Please refer to the official installation guide [here](https://docs.docker.com/engine/install/ubuntu/). Additionally, in order to clone this repository, you need to install Git using the APT package manager via the command line. To do this enter the following commands: 
+```
+sudo apt update
+sudo apt install git
+```
+The application will be deployed inside `/opt/myapi`, since the `/opt` directory is intended for third-party applications. Clone the repository inside `/opt/myapi` using:
+```
+git clone https://github.com/Maiz22/fastapi_post_api.git
+```
+After all files have been successfully downloaded, you need to create a `.env` file to store all environment variables for the different containers. Use the `.env.example` file to get all the necessary information.
+<br>
+The next step is to build your Docker images and create and run the Docker containers. To do this in one step, use the command:
+```
+docker compose up --build
+```
+Docker will now create four containers according to the rules defined in the Dockerfile and docker-compose.yml file. The API is now up and running.
+<br>
+You can test the application by sending requests to the different endpoints using the Swagger UI or a tool like Postman. To see the API documentation (Swagger UI) , just enter:
+```
+http://<device-ip-address>/docs
+```
