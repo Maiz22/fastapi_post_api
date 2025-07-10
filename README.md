@@ -1,4 +1,4 @@
-# Social Media FastAPI
+# [Social Media FastAPI](https://github.com/Maiz22/fastapi_post_api)
 This project is a fully containerized and deployable RESTful Social Media API backend, designed with modern Python based technologies.
 <br>
 At its core the backend is built using Python's FastAPI with SQLModel for ORM and Pydantic for data validation. The asynchronous request handling is managed by Uvicorn, which runs under the process manager Gunicorn. The database layer uses PostgresSQL. An Nginx server acts as a reverse proxy forwarding client requests and enforcing IP-based rate limiting. Authentication has been implemented using JSON Web Tokens (JWT), with tokens being issued on a successful login, and required in request headers for certain endpoints. To further increase account security, login throttling has been implemented using a Redis database to track failed login attempts. Furthermore to improve performance, caching has been added using the same Redis database, to temporarly store response data.
